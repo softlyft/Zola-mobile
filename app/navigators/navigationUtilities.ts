@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react"
 import { BackHandler, Linking, Platform } from "react-native"
 import {
-  NavigationState,
-  PartialState,
+  NavigationContainerRef,
+  NavigationAction,
   createNavigationContainerRef,
+  NavigationState,
+  ParamListBase,
 } from "@react-navigation/native"
 import Config from "../config"
 import type { PersistNavigationConfig } from "../config/config.base"
@@ -31,17 +33,14 @@ export const navigationRef = createNavigationContainerRef<AppStackParamList>()
  * @param {NavigationState | PartialState<NavigationState>} state - The navigation state to traverse.
  * @returns {string} - The name of the current screen.
  */
-export function getActiveRouteName(state: NavigationState | PartialState<NavigationState>): string {
-  const route = state.routes[state.index ?? 0]
+export function getActiveRouteName(state: NavigationState<ParamListBase>) {
+  const route = state.routes[state.index]
 
   // Found the active route -- return the name
-  if (!route.state) return route.name as keyof AppStackParamList
+  if (!route.state) return route.name
 
-  // Recursive call to deal with nested routers
-  return getActiveRouteName(route.state as NavigationState<AppStackParamList>)
+  return getActiveRouteName(route.state as NavigationState<ParamListBase>)
 }
-
-const iosExit = () => false
 
 /**
  * Hook that handles Android back button presses and forwards those on to
@@ -51,9 +50,12 @@ const iosExit = () => false
  * @returns {void}
  */
 export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
+  // ignore if iOS ... no back button!
+  if (Platform.OS === "ios") return
+
   // The reason we're using a ref here is because we need to be able
   // to update the canExit function without re-setting up all the listeners
-  const canExitRef = useRef(Platform.OS !== "android" ? iosExit : canExit)
+  const canExitRef = useRef(canExit)
 
   useEffect(() => {
     canExitRef.current = canExit
@@ -62,9 +64,7 @@ export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
   useEffect(() => {
     // We'll fire this when the back button is pressed on Android.
     const onBackPress = () => {
-      if (!navigationRef.isReady()) {
-        return false
-      }
+      if (!navigationRef.isReady()) return false
 
       // grab the current route
       const routeName = getActiveRouteName(navigationRef.getRootState())
@@ -124,7 +124,7 @@ export function useNavigationPersistence(storage: Storage, persistenceKey: strin
 
   const routeNameRef = useRef<keyof AppStackParamList | undefined>()
 
-  const onNavigationStateChange = (state: NavigationState | undefined) => {
+  const onNavigationStateChange = (state: NavigationState<ParamListBase> | undefined) => {
     const previousRouteName = routeNameRef.current
     if (state !== undefined) {
       const currentRouteName = getActiveRouteName(state)

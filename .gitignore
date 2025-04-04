@@ -91,3 +91,12 @@ web-build/
 
 # Yarn
 .yarn/*
+
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.test.local
+.env.test.development
+.env.test.production
