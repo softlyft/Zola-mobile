@@ -10,6 +10,7 @@ import { useAppTheme } from "@/utils/useAppTheme"
 import { ZolaNavigator } from "@/modules/zola/navigators/ZolaNavigator"
 import { SecurityNavigator } from "@/modules/security/navigators/SecurityNavigator"
 import { IdentityNavigator } from "@/modules/identity/navigators/IdentityNavigator"
+import { CustomDrawerContent } from "./CustomDrawerContent"
 
 export type MainTabParamList = {
   Home: undefined
@@ -84,6 +85,7 @@ export const MainNavigator = () => {
   return (
     <Drawer.Navigator
       initialRouteName="MainTabs"
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerStyle: { backgroundColor: theme.colors.background },
         headerTitleStyle: { color: theme.colors.text, fontSize: 16, fontWeight: "bold" },
