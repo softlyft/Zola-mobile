@@ -1,4 +1,9 @@
-import { supabase } from '../supabase/supabase'
+import { createClient } from "@supabase/supabase-js"
+import { load } from "@/config/env"
+
+const env = load()
+export const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY)
+
 import type { GeneralApiProblem } from './apiProblem'
 
 /**
