@@ -25,7 +25,10 @@ export function ZolaNavigator() {
       <Stack.Screen
         name="ZolaList"
         component={ZolaScreen}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+          contentStyle: { backgroundColor: colors.background },
+        }}
       />
       <Stack.Screen
         name="Chat"

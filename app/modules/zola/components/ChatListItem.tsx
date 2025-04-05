@@ -11,20 +11,29 @@ interface ChatListItemProps {
 }
 
 export function ChatListItem({ conversation, onPress, isAI }: ChatListItemProps) {
-  const lastMessage = conversation.messages[conversation.messages.length - 1]
-  
-  function getRelativeTime(date: Date) {
-    const now = new Date()
-    const diff = now.getTime() - date.getTime()
-    
-    const minutes = Math.floor(diff / 60000)
-    if (minutes < 60) return `${minutes}m ago`
-    
-    const hours = Math.floor(minutes / 60)
-    if (hours < 24) return `${hours}h ago`
-    
-    const days = Math.floor(hours / 24)
-    return `${days}d ago`
+  // Safely get the last message if messages array exists and has items
+  const lastMessage = conversation.messages && conversation.messages.length > 0
+    ? conversation.messages[conversation.messages.length - 1]
+    : null
+
+  function getRelativeTime(date: Date | string) {
+    try {
+      const dateObj = date instanceof Date ? date : new Date(date)
+      const now = new Date()
+      const diff = now.getTime() - dateObj.getTime()
+
+      const minutes = Math.floor(diff / 60000)
+      if (minutes < 60) return `${minutes}m ago`
+
+      const hours = Math.floor(minutes / 60)
+      if (hours < 24) return `${hours}h ago`
+
+      const days = Math.floor(hours / 24)
+      return `${days}d ago`
+    } catch (error) {
+      console.error("Error parsing date:", error)
+      return "recently"
+    }
   }
 
   function getAvatarContent() {
@@ -51,7 +60,7 @@ export function ChatListItem({ conversation, onPress, isAI }: ChatListItemProps)
       </View>
     )
   }
-  
+
   return (
     <TouchableOpacity
       style={$container}
@@ -59,16 +68,16 @@ export function ChatListItem({ conversation, onPress, isAI }: ChatListItemProps)
       activeOpacity={0.7}
     >
       {getAvatarContent()}
-      
+
       <View style={$content}>
         <View style={$topRow}>
           <Text text={conversation.title} style={$title} numberOfLines={1} />
           <Text
-            text={getRelativeTime(new Date(conversation.updatedAt))}
+            text={conversation.updatedAt ? getRelativeTime(conversation.updatedAt) : ""}
             style={$time}
           />
         </View>
-        
+
         {lastMessage && (
           <View style={$bottomRow}>
             <Text
