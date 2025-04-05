@@ -9,12 +9,12 @@ const palette = {
   neutral800: "#191015",
   neutral900: "#000000",
 
-  primary100: "#F4E0D9",
-  primary200: "#E8C1B4",
-  primary300: "#DDA28E",
-  primary400: "#D28468",
-  primary500: "#C76542",
-  primary600: "#A54F31",
+  primary100: "#E6F4EA",
+  primary200: "#C2E3CD",
+  primary300: "#9DD2B0",
+  primary400: "#79C193",
+  primary500: "#0A762B", // Main brand color
+  primary600: "#086324",
 
   secondary100: "#DCDDE9",
   secondary200: "#BCC0D6",
@@ -33,6 +33,19 @@ const palette = {
 
   overlay20: "rgba(25, 16, 21, 0.2)",
   overlay50: "rgba(25, 16, 21, 0.5)",
+  
+  // New gradient colors
+  gradient: {
+    primary: ["#0A762B", "#0D9137"],
+    secondary: ["#E6F4EA", "#C2E3CD"],
+  },
+
+  // New shadow colors
+  shadow: {
+    light: "rgba(0, 0, 0, 0.05)",
+    medium: "rgba(0, 0, 0, 0.1)",
+    dark: "rgba(0, 0, 0, 0.15)",
+  },
 } as const
 
 export const colors = {
@@ -51,35 +64,48 @@ export const colors = {
    */
   text: palette.neutral800,
   /**
-   * Secondary text information.
+   * Secondary text color for less important content.
    */
   textDim: palette.neutral600,
   /**
    * The default color of the screen background.
    */
-  background: palette.neutral200,
+  background: palette.neutral100,
   /**
    * The default border color.
    */
-  border: palette.neutral400,
+  border: palette.neutral300,
   /**
    * The main tinting color.
    */
   tint: palette.primary500,
   /**
-   * The inactive tinting color.
+   * A subtle color used for lines/borders.
    */
-  tintInactive: palette.neutral300,
-  /**
-   * A subtle color used for lines.
-   */
-  separator: palette.neutral300,
+  separator: palette.neutral200,
   /**
    * Error messages.
    */
   error: palette.angry500,
   /**
    * Error Background.
+   *
    */
   errorBackground: palette.angry100,
+
+  // New semantic colors
+  card: {
+    background: palette.neutral100,
+    shadow: palette.shadow.light,
+  },
+  button: {
+    primary: palette.primary500,
+    secondary: palette.secondary500,
+    disabled: palette.neutral300,
+  },
+  input: {
+    background: palette.neutral200,
+    border: palette.neutral300,
+    placeholder: palette.neutral500,
+  },
 } as const

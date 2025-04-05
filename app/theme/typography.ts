@@ -51,21 +51,46 @@ const fonts = {
   },
 }
 
+/**
+ * You can find a list of available fonts on both iOS and Android here:
+ * https://github.com/react-native-training/react-native-fonts
+ *
+ * If you're interested in adding a custom font to your project,
+ * check out the readme file in ./assets/fonts/ then come back here
+ * and enter your new font name. Remember the Android font name
+ * is probably different than iOS.
+ */
 export const typography = {
-  /**
-   * The fonts are available to use, but prefer using the semantic name.
-   */
-  fonts,
   /**
    * The primary font. Used in most places.
    */
-  primary: fonts.spaceGrotesk,
+  primary: Platform.select({
+    ios: "SF Pro",
+    android: "Inter",
+  }),
+
   /**
-   * An alternate font used for perhaps titles and stuff.
+   * Font weights
    */
-  secondary: Platform.select({ ios: fonts.helveticaNeue, android: fonts.sansSerif }),
+  weights: {
+    light: "300",
+    regular: "400",
+    medium: "500",
+    semiBold: "600",
+    bold: "700",
+  },
+
   /**
-   * Lets get fancy with a monospace font!
+   * The various sizes of type.
    */
-  code: Platform.select({ ios: fonts.courier, android: fonts.monospace }),
+  sizes: {
+    xxs: 10,
+    xs: 12, // timestamps
+    sm: 14, // message previews
+    md: 16, // user names
+    lg: 18, // headers
+    xl: 20,
+    xxl: 24,
+    xxxl: 32,
+  },
 }

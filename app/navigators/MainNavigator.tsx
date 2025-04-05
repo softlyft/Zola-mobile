@@ -6,6 +6,8 @@ import { HomeScreen } from "@/screens/HomeScreen"
 import { Icon } from "@/components"
 import { colors } from "@/theme"
 import { TextStyle, ViewStyle } from "react-native"
+import { ZolaNavigator } from "@/modules/zola/navigators/ZolaNavigator"
+import { SecurityNavigator } from "@/modules/security/navigators/SecurityNavigator"
 
 export type MainTabParamList = {
   Home: undefined
@@ -17,6 +19,7 @@ export type DrawerParamList = {
   MainTabs: NavigatorScreenParams<MainTabParamList>
   Community: undefined
   Identity: undefined
+  Security: undefined
   Zola: undefined
 }
 
@@ -40,7 +43,7 @@ function MainTabs() {
       />
       <Tab.Screen
         name="Zola"
-        component={HomeScreen} // Temporarily using HomeScreen
+        component={ZolaNavigator}
         options={{
           tabBarIcon: ({ color }: { color: string }) => <Icon icon="ladybug" color={color} />,
         }}
@@ -88,8 +91,15 @@ export const MainNavigator = () => {
         }}
       />
       <Drawer.Screen
+        name="Security"
+        component={SecurityNavigator}
+        options={{
+          drawerIcon: ({ color }: { color: string }) => <Icon icon="hidden" color={color} />,
+        }}
+      />
+      <Drawer.Screen
         name="Zola"
-        component={HomeScreen} // Temporarily using HomeScreen
+        component={ZolaNavigator}
         options={{
           drawerIcon: ({ color }: { color: string }) => <Icon icon="ladybug" color={color} />,
         }}
