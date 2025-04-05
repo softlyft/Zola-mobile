@@ -1,4 +1,6 @@
 import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
+import { PhoneProfile } from "../types"
+import { identityApi } from "../services/identityApi"
 
 export interface PhoneSearch {
   id: string
@@ -16,6 +18,21 @@ export const UserModel = types.model("User").props({
   avatar: types.maybeNull(types.string),
   joinDate: types.Date,
   employeeId: types.string,
+})
+
+export const PhoneProfileModel = types.model("PhoneProfile").props({
+  id: types.identifier,
+  userId: types.string,
+  displayName: types.string,
+  phoneNumber: types.string,
+  countryCode: types.maybe(types.string),
+  formattedNumber: types.maybe(types.string),
+  department: types.maybe(types.string),
+  role: types.maybe(types.string),
+  avatar: types.maybe(types.string),
+  email: types.maybe(types.string),
+  createdAt: types.Date,
+  updatedAt: types.Date,
 })
 
 const MOCK_USER = {
@@ -41,10 +58,27 @@ export const IdentityStoreModel = types
   .props({
     currentUser: types.maybeNull(UserModel),
     recentPhoneSearches: types.array(PhoneSearchModel),
+    lastCallerProfile: types.maybeNull(PhoneProfileModel),
+    isSearchingProfile: types.optional(types.boolean, false),
   })
   .actions((store) => ({
     setCurrentUser(user: typeof MOCK_USER) {
       store.currentUser = user
+    },
+    setLastCallerProfile(profile: PhoneProfile | null) {
+      if (profile) {
+        store.lastCallerProfile = PhoneProfileModel.create({
+          ...profile,
+          // Ensure dates are Date objects
+          createdAt: profile.createdAt instanceof Date ? profile.createdAt : new Date(profile.createdAt),
+          updatedAt: profile.updatedAt instanceof Date ? profile.updatedAt : new Date(profile.updatedAt),
+        })
+      } else {
+        store.lastCallerProfile = null
+      }
+    },
+    setIsSearchingProfile(isSearching: boolean) {
+      store.isSearchingProfile = isSearching
     },
     addPhoneSearch(countryCode: string, phoneNumber: string) {
       const newSearch = PhoneSearchModel.create({
@@ -53,12 +87,12 @@ export const IdentityStoreModel = types
         phoneNumber,
         timestamp: new Date(),
       })
-      
+
       // Remove duplicates if they exist
       const filtered = store.recentPhoneSearches.filter(
         search => !(search.countryCode === countryCode && search.phoneNumber === phoneNumber)
       )
-      
+
       // Add new search at the beginning, limit to 5 recent searches
       store.recentPhoneSearches.replace([newSearch, ...filtered.slice(0, 4)])
     }
@@ -67,11 +101,51 @@ export const IdentityStoreModel = types
     get hasUser() {
       return !!store.currentUser
     },
+    get hasLastCallerProfile() {
+      return !!store.lastCallerProfile
+    },
   }))
   .actions((store) => ({
+    async searchProfileByPhone(phoneNumber: string) {
+      try {
+        store.setIsSearchingProfile(true)
+
+        // Extract country code and clean the number if needed
+        // This is a simple implementation - in a real app, you'd use a library like libphonenumber-js
+        let countryCode = ""
+        let cleanNumber = phoneNumber
+
+        // Check if the number starts with a + and has a country code
+        if (phoneNumber.startsWith('+')) {
+          const match = phoneNumber.match(/^\+(\d+)(.*)$/)
+          if (match) {
+            countryCode = "+" + match[1]
+            cleanNumber = match[2]
+          }
+        }
+
+        // Add the search to recent searches
+        store.addPhoneSearch(countryCode || "+1", cleanNumber) // Default to +1 if no country code
+
+        // Search for the profile in Supabase
+        const profile = await identityApi.searchProfileByPhone(phoneNumber)
+        store.setLastCallerProfile(profile)
+
+        return profile
+      } catch (error) {
+        console.error('Error searching for profile:', error)
+        return null
+      } finally {
+        store.setIsSearchingProfile(false)
+      }
+    },
+    handleIncomingCall(phoneNumber: string) {
+      // This method will be called when a call is detected
+      return store.searchProfileByPhone(phoneNumber)
+    },
     loadInitialData() {
       store.setCurrentUser(MOCK_USER)
-      
+
       // Add some mock phone searches
       store.recentPhoneSearches.replace([
         PhoneSearchModel.create({
