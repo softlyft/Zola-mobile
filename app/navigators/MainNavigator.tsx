@@ -30,6 +30,7 @@ const Tab = createBottomTabNavigator<MainTabParamList>()
 function MainTabs() {
   return (
     <Tab.Navigator
+      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.tint,
@@ -63,6 +64,7 @@ function MainTabs() {
 export const MainNavigator = () => {
   return (
     <Drawer.Navigator
+      initialRouteName="MainTabs"
       screenOptions={{
         headerStyle: $headerStyle,
         headerTitleStyle: $headerTitleStyle,

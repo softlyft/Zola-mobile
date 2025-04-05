@@ -49,7 +49,7 @@ const AppStack = observer(function AppStack() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName="Main"
+      initialRouteName="Main" // This ensures Main is the initial route
     >
       <Stack.Screen name="Main" component={MainNavigator} />
     </Stack.Navigator>
