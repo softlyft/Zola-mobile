@@ -11,8 +11,10 @@ import Config from "../config"
 import { useStores } from "../models"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { useAppTheme, useThemeProvider } from "@/utils/useAppTheme"
-import { ComponentProps } from "react"
+import { ComponentProps, useEffect, useState } from "react"
 import { MainNavigator, DrawerParamList } from "./MainNavigator"
+import { AuthNavigator } from "./AuthNavigator"
+import { View, ActivityIndicator, ViewStyle } from "react-native"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -29,6 +31,7 @@ import { MainNavigator, DrawerParamList } from "./MainNavigator"
  */
 export type AppStackParamList = {
   Main: NavigatorScreenParams<DrawerParamList>
+  Auth: undefined
 }
 
 /**
@@ -46,12 +49,35 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStack
 const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
+  const { authenticationStore } = useStores()
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+
+  useEffect(() => {
+    // Check if the user is authenticated when the component mounts
+    const checkAuth = async () => {
+      await authenticationStore.checkAuth()
+      setIsCheckingAuth(false)
+    }
+
+    checkAuth()
+  }, [authenticationStore])
+
+  // Show a loading indicator while checking authentication status
+  if (isCheckingAuth) {
+    return (
+      <View style={$loadingContainer}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
+
   return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false }}
-      initialRouteName="Main" // This ensures Main is the initial route
-    >
-      <Stack.Screen name="Main" component={MainNavigator} />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {authenticationStore.isAuthenticated ? (
+        <Stack.Screen name="Main" component={MainNavigator} />
+      ) : (
+        <Stack.Screen name="Auth" component={AuthNavigator} />
+      )}
     </Stack.Navigator>
   )
 })
@@ -73,3 +99,9 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
     </NavigationContainer>
   )
 })
+
+const $loadingContainer: ViewStyle = {
+  flex: 1,
+  justifyContent: "center",
+  alignItems: "center",
+}

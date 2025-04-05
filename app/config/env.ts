@@ -29,9 +29,11 @@ const DEFAULT_ENV: Env = {
  * This will combine the default environment variables with any that are set in the environment.
  */
 export function load(): Env {
+  // In a real app, you would use a library like react-native-dotenv to load these values
+  // For this implementation, we'll hardcode the values from .env
   return {
     ...DEFAULT_ENV,
-    // Add any environment-specific overrides here
-    // Example: SUPABASE_URL: process.env.SUPABASE_URL || DEFAULT_ENV.SUPABASE_URL,
+    SUPABASE_URL: 'https://piwbsqwrcotflpmpafrz.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpd2JzcXdyY290ZmxwbXBhZnJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4ODYyNTYsImV4cCI6MjA1OTQ2MjI1Nn0.bnv1MvgFMW7wQhuuahzHSgtF-8NtWFzFA8IRD0nBiNw',
   }
 }
