@@ -1,4 +1,7 @@
+export * from "./navigators/IdentityNavigator"
 export * from "./screens/ProfileScreen"
+export * from "./components/ProfileCard"
+export * from "./components/PhoneSearch"
 export * from "./stores/identityStore"
 export * from "./types"
 

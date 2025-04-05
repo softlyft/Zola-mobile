@@ -8,6 +8,7 @@ import { colors } from "@/theme"
 import { TextStyle, ViewStyle } from "react-native"
 import { ZolaNavigator } from "@/modules/zola/navigators/ZolaNavigator"
 import { SecurityNavigator } from "@/modules/security/navigators/SecurityNavigator"
+import { IdentityNavigator } from "@/modules/identity/navigators/IdentityNavigator"
 
 export type MainTabParamList = {
   Home: undefined
@@ -85,7 +86,7 @@ export const MainNavigator = () => {
       />
       <Drawer.Screen
         name="Identity"
-        component={HomeScreen} // Temporarily using HomeScreen
+        component={IdentityNavigator}
         options={{
           drawerIcon: ({ color }: { color: string }) => <Icon icon="ladybug" color={color} />,
         }}
