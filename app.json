@@ -44,7 +44,7 @@
           "image": "./assets/images/app-icon-android-adaptive-foreground.png",
           "imageWidth": 300,
           "resizeMode": "contain",
-          "backgroundColor": "#191015"
+          "backgroundColor": "#0A762B"
         }
       ]
     ],
