@@ -62,13 +62,23 @@ export const AuthenticationStoreModel = types
     },
     setUser(user: any) {
       if (user) {
-        store.user = {
-          id: user.id,
-          email: user.email,
-          firstName: user.user_metadata?.first_name,
-          lastName: user.user_metadata?.last_name,
-          avatar: user.user_metadata?.avatar_url,
-          phone: user.user_metadata?.phone,
+        // Handle both Supabase user objects and our custom user objects
+        if (user.user_metadata) {
+          // This is a Supabase user object
+          store.user = {
+            id: user.id,
+            email: user.email,
+            firstName: user.user_metadata?.first_name,
+            lastName: user.user_metadata?.last_name,
+            avatar: user.user_metadata?.avatar_url,
+            phone: user.user_metadata?.phone,
+          }
+        } else {
+          // This is our custom user object (from ProfileCard)
+          store.user = {
+            ...store.user, // Keep existing properties
+            ...user, // Override with new properties
+          }
         }
       } else {
         store.user = undefined
