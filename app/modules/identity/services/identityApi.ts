@@ -134,7 +134,7 @@ export const identityApi = {
     }
   },
 
-  async searchProfileByPhone(phoneNumber: string): Promise<any | null> {
+  async searchProfileByPhone(phoneNumber: string): Promise<PhoneProfile | null> {
     try {
       // Remove any non-digit characters from the phone number
       const cleanedNumber = phoneNumber.replace(/\D/g, '')
