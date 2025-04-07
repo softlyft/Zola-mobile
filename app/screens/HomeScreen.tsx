@@ -1,17 +1,17 @@
 import React from "react"
-import { View, ViewStyle, ScrollView, TouchableOpacity, ImageStyle, Image, TextStyle } from "react-native"
+import { View, ViewStyle, TouchableOpacity, ImageStyle, Image, TextStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Screen, Text, Icon } from "@/components"
 import { colors, spacing } from "@/theme"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, NavigationProp } from "@react-navigation/native"
 import { useStores } from "@/models"
 
 export const HomeScreen = observer(function HomeScreen() {
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp<any>>()
   const { authenticationStore } = useStores()
   const user = authenticationStore.user
 
-  const navigateTo = (screen) => {
+  const navigateTo = (screen: string) => {
     navigation.navigate(screen)
   }
 
@@ -20,10 +20,10 @@ export const HomeScreen = observer(function HomeScreen() {
       {/* Welcome Header */}
       <View style={$header}>
         <View>
-          <Text preset="heading" text="Welcome back," />
-          <Text preset="heading" text={user?.firstName || "User"} style={$userName} />
+          <Text preset="subheading" text="Welcome back," style={$welcomeText} />
+          <Text preset="subheading" text={user?.firstName || "User"} style={$userName} />
         </View>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={$profileButton}
           onPress={() => navigateTo("Identity")}
         >
@@ -43,8 +43,8 @@ export const HomeScreen = observer(function HomeScreen() {
       {/* Main Dashboard Cards */}
       <View style={$cardsContainer}>
         {/* Identity Card */}
-        <TouchableOpacity 
-          style={$card} 
+        <TouchableOpacity
+          style={$card}
           onPress={() => navigateTo("Identity")}
         >
           <View style={$cardHeader}>
@@ -57,14 +57,14 @@ export const HomeScreen = observer(function HomeScreen() {
             <Text text="KYC Level 2" style={$cardText} />
             <View style={$actionRow}>
               <Text text="Complete profile" style={$actionText} />
-              <Icon icon="chevronRight" color={colors.palette.primary500} size={16} />
+              <Icon icon="caretRight" color={colors.palette.primary500} size={16} />
             </View>
           </View>
         </TouchableOpacity>
 
         {/* Communities Card */}
-        <TouchableOpacity 
-          style={$card} 
+        <TouchableOpacity
+          style={$card}
           onPress={() => navigateTo("Communities")}
         >
           <View style={$cardHeader}>
@@ -87,8 +87,8 @@ export const HomeScreen = observer(function HomeScreen() {
         </TouchableOpacity>
 
         {/* Events & Polls Card */}
-        <TouchableOpacity 
-          style={$card} 
+        <TouchableOpacity
+          style={$card}
           onPress={() => navigateTo("Events")}
         >
           <View style={$cardHeader}>
@@ -101,14 +101,14 @@ export const HomeScreen = observer(function HomeScreen() {
             <Text text="2 Active polls" style={$cardText} />
             <View style={$actionRow}>
               <Text text="Vote now" style={$actionText} />
-              <Icon icon="chevronRight" color={colors.palette.primary500} size={16} />
+              <Icon icon="caretRight" color={colors.palette.primary500} size={16} />
             </View>
           </View>
         </TouchableOpacity>
 
         {/* Security Card */}
-        <TouchableOpacity 
-          style={$card} 
+        <TouchableOpacity
+          style={$card}
           onPress={() => navigateTo("Security")}
         >
           <View style={$cardHeader}>
@@ -121,7 +121,7 @@ export const HomeScreen = observer(function HomeScreen() {
             <Text text="2FA enabled" style={$cardText} />
             <View style={$actionRow}>
               <Text text="Settings" style={$actionText} />
-              <Icon icon="chevronRight" color={colors.palette.primary500} size={16} />
+              <Icon icon="caretRight" color={colors.palette.primary500} size={16} />
             </View>
           </View>
         </TouchableOpacity>
@@ -221,8 +221,15 @@ const $header: ViewStyle = {
   marginBottom: spacing.lg,
 }
 
+const $welcomeText: TextStyle = {
+  fontSize: 16,
+  color: colors.text,
+}
+
 const $userName: TextStyle = {
+  fontSize: 18,
   color: colors.palette.primary500,
+  fontWeight: "bold",
 }
 
 const $profileButton: ViewStyle = {
