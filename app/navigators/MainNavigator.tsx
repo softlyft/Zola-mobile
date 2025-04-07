@@ -4,12 +4,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { NavigatorScreenParams } from "@react-navigation/native"
 import { HomeScreen } from "@/screens/HomeScreen"
 import { Icon } from "@/components"
-import { colors } from "@/theme"
-import { TextStyle, ViewStyle } from "react-native"
+// No additional imports needed
 import { useAppTheme } from "@/utils/useAppTheme"
 import { ZolaNavigator } from "@/modules/zola/navigators/ZolaNavigator"
 import { SecurityNavigator } from "@/modules/security/navigators/SecurityNavigator"
 import { IdentityNavigator } from "@/modules/identity/navigators/IdentityNavigator"
+import { CommunityNavigator } from "@/modules/community/navigators/CommunityNavigator"
 import { CustomDrawerContent } from "./CustomDrawerContent"
 
 export type MainTabParamList = {
@@ -89,6 +89,7 @@ export const MainNavigator = () => {
       screenOptions={{
         headerStyle: { backgroundColor: theme.colors.background },
         headerTitleStyle: { color: theme.colors.text, fontSize: 16, fontWeight: "bold" },
+        headerTintColor: theme.colors.tint, // This sets the color of the drawer icon
         drawerType: "front",
         drawerStyle: {
           backgroundColor: theme.colors.background,
@@ -112,7 +113,7 @@ export const MainNavigator = () => {
       />
       <Drawer.Screen
         name="Community"
-        component={HomeScreen} // Temporarily using HomeScreen
+        component={CommunityNavigator}
         options={{
           drawerIcon: ({ color }: { color: string }) => <Icon icon="community" color={color} />,
         }}

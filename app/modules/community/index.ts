@@ -1,4 +1,5 @@
 export * from "./screens/CommunityScreen"
+export * from "./navigators/CommunityNavigator"
 export * from "./stores/communityStore"
 export * from "./types"
 
